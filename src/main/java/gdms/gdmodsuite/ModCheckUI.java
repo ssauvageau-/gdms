@@ -198,7 +198,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                             String lc = entry.toLowerCase();
                             if(
                                     (lc.contains("/") && lc.contains(".")) &&
-                                    !(lc.contains("charlevel") || lc.contains(".tpl") || lc.contains("playerlevel")) &&
+                                    !(lc.contains("charlevel") || lc.contains("averagepartylevel") || lc.contains("itemlevel") || lc.contains(".tpl") || lc.contains(".lvl") || lc.contains("playerlevel")) &&
                                     !this.master.contains(lc) &&
                                     !modMaster.contains(lc) &&
                                     !fieldName.equals("fileNameHistoryEntry")) {
