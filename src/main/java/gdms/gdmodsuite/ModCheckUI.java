@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import static java.nio.file.Files.newBufferedReader;
 import java.nio.file.Path;
@@ -113,10 +114,9 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
         
         this.outputText.setText("Output:\n");
             
-        int malformed = 0; //dbr
-        int malformedS = 0; //scripts (lua)
-        int malformedQ = 0; //quests (qst)
-        int malformedC = 0; //conversations (cnv)
+        int malformed = 0; // dbr
+        int malformedS = 0; // scripts (lua)
+        int malformedQC = 0; // qst/cnv
         int brokenTags = 0;
         int baseSpeedAlterations = 0;
         
@@ -264,6 +264,26 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                         lnum++;
                     }
                 }
+                else if (fn.endsWith(".cnv") || fn.endsWith(".qst")) {
+                    String path = this.install_dir + "\\mods\\" + modName + "\\resources\\" + fn;
+                    for(String line : Files.readAllLines(Paths.get(path), StandardCharsets.ISO_8859_1)) {
+                        line = line.toLowerCase();
+                        Pattern p = Pattern.compile("[a-z0-9_-]+(\\/[a-z0-9_-]*)*\\.[a-z][a-z][a-z]"); //regex = match filepaths 
+                        Matcher m = p.matcher(line);
+                        while(m.find()) {
+                            String datum = m.group(0);
+                            if((datum != null && !datum.equals("") && datum.contains("/")) &&
+                                    !this.master.contains(datum) &&
+                                    !modMaster.contains(datum)) {
+                                boolean vanilla_issue = vanillaIssue(datum, path, modName);
+                                if((pruneVanilla && !vanilla_issue) || (!pruneVanilla)) {
+                                    malformedQC++;
+                                    this.outputText.append("Malformed QST/CNV Reference in\n\t" + fn + "\n\t-\n\t" + datum + "\n");
+                                }
+                            }
+                        }
+                    }
+                }
             }
             
         } catch (IOException ex) {System.out.println(ex);}
@@ -272,10 +292,8 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             this.outputText.append("\t" + malformed + " Malformed References\n");
         if(malformedS > 0)
             this.outputText.append("\t" + malformedS + " Malformed Script References\n");
-        if(malformedQ > 0)
-            this.outputText.append("\t" + malformedQ + " Malformed Quest References\n");
-        if(malformedC > 0)
-            this.outputText.append("\t" + malformedC + " Malformed Conversation References\n");
+        if(malformedQC > 0)
+            this.outputText.append("\t" + malformedQC + " Malformed QST/CNV References\n");
         if(brokenTags > 0)
             this.outputText.append("\t" + brokenTags + " Broken Tags\n");
         if(baseSpeedAlterations > 0)
@@ -308,7 +326,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
      * Code adopted from Files.readAllLines
      */
     private boolean findInLines(Path path, String pattern) throws IOException {
-        try (BufferedReader reader = newBufferedReader(path, java.nio.charset.StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = newBufferedReader(path, java.nio.charset.StandardCharsets.ISO_8859_1)) {
             for (;;) {
                 String line = reader.readLine();
                 if (line == null)
