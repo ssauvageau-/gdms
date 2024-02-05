@@ -22,6 +22,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.SwingWorker;
 
@@ -111,7 +113,10 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
         
         this.outputText.setText("Output:\n");
             
-        int malformed = 0;
+        int malformed = 0; //dbr
+        int malformedS = 0; //scripts (lua)
+        int malformedQ = 0; //quests (qst)
+        int malformedC = 0; //conversations (cnv)
         int brokenTags = 0;
         int baseSpeedAlterations = 0;
         
@@ -169,11 +174,11 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             ***/
             this.outputText.append("Beginning " + modName + " Integrity Check...\n");
             this.outputText.updateUI();
-            for(String fn : modDBR) {
+            for(String fn : modMaster) {
                 boolean ignoreBaseSpeedChanges = false;
                 if(fn.endsWith(".dbr")) { //just checking in case we hit a .arz or something
                     String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + fn;
-                    int lnum = 0;
+                    int lnum = 1;
                     for(String line : Files.readAllLines(Paths.get(path))) {
                         if (line.contains(".tpl")) {
                             if(line.contains("player.tpl") || line.contains("monster.tpl") ||
@@ -186,7 +191,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                         }
                         String[] field = line.split(",|;");
                         String fieldName = field[0];
-                        ENTRIES: for (int index = 1; index < field.length; index++) {
+                        for (int index = 1; index < field.length; index++) {
                             String entry = field[index];
                             
                             //Malformed references:
@@ -236,12 +241,41 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                         lnum++;
                     }
                 }
+                else if(fn.endsWith(".lua")) {
+                    String path = this.install_dir + "\\mods\\" + modName + "\\resources\\" + fn;
+                    int lnum = 1;
+                    for(String line : Files.readAllLines(Paths.get(path))) {
+                        if(line.contains("\"")) {
+                            Pattern p = Pattern.compile("\"([^\"]*)\""); //regex = match content within quotes
+                            Matcher m = p.matcher(line);
+                            while(m.find()) {
+                                String datum = m.group(1).toLowerCase();
+                                if((datum != null && datum.endsWith(".dbr")) && 
+                                        !this.master.contains(datum) &&
+                                        !modMaster.contains(datum)) {
+                                    boolean vanilla_issue = vanillaIssue(datum, path, modName);
+                                    if((pruneVanilla && !vanilla_issue) || (!pruneVanilla)) {
+                                        malformedS++;
+                                        this.outputText.append("Malformed Script Reference in\n\t" + fn + "\n\t\tLine: " + lnum + "\n\t" + datum + "\n");
+                                    }
+                                }
+                            }
+                        }
+                        lnum++;
+                    }
+                }
             }
             
         } catch (IOException ex) {System.out.println(ex);}
         this.outputText.append(this.inputField.getText() + " checked successfully.\n");
         if(malformed > 0)
             this.outputText.append("\t" + malformed + " Malformed References\n");
+        if(malformedS > 0)
+            this.outputText.append("\t" + malformedS + " Malformed Script References\n");
+        if(malformedQ > 0)
+            this.outputText.append("\t" + malformedQ + " Malformed Quest References\n");
+        if(malformedC > 0)
+            this.outputText.append("\t" + malformedC + " Malformed Conversation References\n");
         if(brokenTags > 0)
             this.outputText.append("\t" + brokenTags + " Broken Tags\n");
         if(baseSpeedAlterations > 0)
