@@ -7,8 +7,10 @@ package gdms.gdmodsuite;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,15 +33,20 @@ public class GDModSuite {
     public static void main(String[] args) {
         Properties prop = new Properties();
         String fn = "gdms.cfg";
+        File file = new File(fn);
         try(FileInputStream fis = new FileInputStream(fn)) {
             prop.load(fis);
+            if(!prop.getProperty("gdms.version").equals("0.9.2")) {
+                prop.setProperty("gdms.version", "0.9.2");
+                saveProperties(prop, file);
+            }
         } catch(FileNotFoundException ex){
             try {
                 Files.write(
                         Paths.get(fn), 
                         Arrays.asList(
                                 "gdms.name=Grim Dawn Modding Suite",
-                                "gdms.version=0.9",
+                                "gdms.version=0.9.2",
                                 "install=",
                                 "gdx1=",
                                 "gdx2=",
@@ -61,9 +68,19 @@ public class GDModSuite {
         });
     }
     
+    private static void saveProperties(Properties p, File file) {
+        try (FileOutputStream fr = new FileOutputStream(file)) {
+            p.store(fr, "");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private static void createAndShowGUI(Properties prop) {
         GDModSuiteUI msui = new GDModSuiteUI(prop);
-        JFrame frame = new JFrame("Grim Dawn Modding Suite ~ Ceno ~ v0.9.0");
+        JFrame frame = new JFrame(prop.getProperty("gdms.name") + " ~ Ceno ~ v" + prop.getProperty("gdms.version"));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(msui);
         frame.pack();
