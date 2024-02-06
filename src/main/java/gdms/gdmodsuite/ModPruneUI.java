@@ -242,21 +242,21 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX3 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
-                        File gdx2F = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        File gdx2F = new File(this.install_dir + "\\mods\\gdx2\\resources\\" + modFN);
                         if(gdx2 && gdx2F.isFile() && 
                                 hashEquality(gdx2F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX2 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
-                        File gdx1F = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        File gdx1F = new File(this.install_dir + "\\mods\\gdx1\\resources\\" + modFN);
                         if(gdx1 && gdx1F.isFile() && 
                                 hashEquality(gdx1F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX1 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
-                        File gdvF = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        File gdvF = new File(this.install_dir + "\\resources\\" + modFN);
                         if(gdvF.isFile() && 
                                 hashEquality(gdvF, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
