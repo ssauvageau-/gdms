@@ -8,9 +8,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +41,8 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
     private String install_dir = "";
     private boolean gdx1, gdx2, gdx3;
     private javax.swing.JFileChooser fc;
-    private ArrayList<String> stagingFN;
+    private ArrayList<String> stagingDBR;
+    private ArrayList<String> stagingRES; 
     private HashMap<String, String> trimStage;
     private Set<String> master;
     
@@ -89,7 +93,9 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
     }
     
     private void prune_process() {
-        this.stagingFN = new ArrayList<>();
+        // Reset info
+        this.stagingDBR = new ArrayList<>();
+        this.stagingRES = new ArrayList<>();
         this.trimStage = new HashMap<>();
         this.outputText.setText("Output:\n");
         
@@ -115,16 +121,15 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             this.master = Collections.synchronizedSet(new HashSet<>(Files.readAllLines(this.gdlist, java.nio.charset.StandardCharsets.UTF_8)));
             
             /***
-             * Mod DBR Reference List
+             * Mod DBR/Resource Reference List
              ***/
             this.outputText.append("Processing " + modName + " Files...\n");
             this.outputText.updateUI();
             ArrayList<String> modMaster = new ArrayList<>();
             String modDBR = this.install_dir + "\\mods\\" + modName + "\\database";
-            if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {
-                String res = this.install_dir + "\\mods\\" + modName + "\\resources";
-                
-                modMaster.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
+            String modRes = this.install_dir + "\\mods\\" + modName + "\\resources";
+            if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {                
+                modMaster.addAll(Files.walk(Paths.get(modRes)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(modRes, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
                 modMaster.addAll(Files.walk(Paths.get(modDBR)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(modDBR, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
             }
             else
@@ -139,12 +144,14 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             for(String modFN : modMaster) {
                 if(this.master.contains(modFN)) {
                     if(modFN.endsWith(".dbr")) {
+                        // All this garbage could be thrown in a method of its own. 
+                        // Should do so to clean up code later.
                         File gdx3F = new File(this.install_dir + "\\mods\\gdx3\\database\\" + modFN);
                         if(gdx3 && gdx3F.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdx3F.getPath()))))) {
-                                this.stagingFN.add(modFN);
-                                this.outputText.append("Found identical file\n\t" + modFN + "\n within GDX3 data. Staged for deletion.");
+                                this.stagingDBR.add(modDBR + "\\" + modFN);
+                                this.outputText.append("Found identical file\n\t" + modFN + "\nWithin GDX3 data. Staged for deletion.\n");
                                 this.outputText.updateUI();
                             }
                             else { //file was changed compared to GD files and should be preserved, but consider trimming
@@ -162,8 +169,8 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                         if(gdx2 && gdx2F.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdx2F.getPath()))))) {
-                                this.stagingFN.add(modFN);
-                                this.outputText.append("Found identical file\n\t" + modFN + "\n within GDX2 data. Staged for deletion.");
+                                this.stagingDBR.add(modDBR + "\\" + modFN);
+                                this.outputText.append("Found identical file\n\t" + modFN + "\nWithin GDX2 data. Staged for deletion.\n");
                                 this.outputText.updateUI();
                             }
                             else { //file was changed compared to GD files and should be preserved, but consider trimming
@@ -181,8 +188,8 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                         if(gdx1 && gdx1F.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdx1F.getPath()))))) {
-                                this.stagingFN.add(modFN);
-                                this.outputText.append("Found identical file\n\t" + modFN + "\n within GDX1 data. Staged for deletion.");
+                                this.stagingDBR.add(modDBR + "\\" + modFN);
+                                this.outputText.append("Found identical file\n\t" + modFN + "\nWithin GDX1 data. Staged for deletion.\n");
                                 this.outputText.updateUI();
                             }
                             else { //file was changed compared to GD files and should be preserved, but consider trimming
@@ -200,8 +207,8 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                         if(gdv.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdv.getPath()))))) {
-                                this.stagingFN.add(modFN);
-                                this.outputText.append("Found identical file\n\t" + modFN + "\n within Vanilla GD data. Staged for deletion.");
+                                this.stagingDBR.add(modDBR + "\\" + modFN);
+                                this.outputText.append("Found identical file\n\t" + modFN + "\nWithin Vanilla GD data. Staged for deletion.\n");
                                 this.outputText.updateUI();
                             }
                             else { //file was changed compared to GD files and should be preserved, but consider trimming
@@ -227,18 +234,56 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                             }
                         }
                     }
-                    else if (!(modFN.endsWith(".arc") || modFN.endsWith(".arz"))) {
-                        this.outputText.append("Found similarly-named resource file\n\t" + 
-                                modFN + 
-                                "\nsomewhere in Crate files. Resource pruning is currently not supported by this version of GDMS."
-                                        + "\nConsider investigating whether this is an unchanged file yourself in the interim!\n");
-                        this.outputText.updateUI();
+                    else if (!(modFN.endsWith(".arc") || modFN.endsWith(".arz") || modFN.endsWith(".dll"))) {
+                        File gdx3F = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        if(gdx3 && gdx3F.isFile() && 
+                                hashEquality(gdx3F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                            this.stagingRES.add(modRes + "\\" + modFN);
+                            this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX3 file:\n\t" + modFN + "\nStaged for deletion.\n");
+                            this.outputText.updateUI();
+                        }
+                        File gdx2F = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        if(gdx2 && gdx2F.isFile() && 
+                                hashEquality(gdx2F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                            this.stagingRES.add(modRes + "\\" + modFN);
+                            this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX2 file:\n\t" + modFN + "\nStaged for deletion.\n");
+                            this.outputText.updateUI();
+                        }
+                        File gdx1F = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        if(gdx1 && gdx1F.isFile() && 
+                                hashEquality(gdx1F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                            this.stagingRES.add(modRes + "\\" + modFN);
+                            this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX1 file:\n\t" + modFN + "\nStaged for deletion.\n");
+                            this.outputText.updateUI();
+                        }
+                        File gdvF = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        if(gdvF.isFile() && 
+                                hashEquality(gdvF, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                            this.stagingRES.add(modRes + "\\" + modFN);
+                            this.outputText.append("Found Resource File with identical SHA-256 hash to a Vanilla GD file:\n\t" + modFN + "\nStaged for deletion.\n");
+                            this.outputText.updateUI();
+                        }
                     }
                 }
             }
             this.outputText.append("Finished Overlap Check.\n");
             this.outputText.updateUI();
         } catch (IOException ex) {System.err.println(ex);}
+    }
+    
+    private boolean hashEquality(File f1, File f2) {
+        try {
+            return new BigInteger(
+                    1, MessageDigest.getInstance("SHA-256").digest(
+                            Files.readAllBytes(Paths.get(f1.getPath())))
+            ).compareTo(new BigInteger(
+                    1, MessageDigest.getInstance("SHA-256").digest(
+                            Files.readAllBytes(Paths.get(f2.getPath()))))
+            ) == 0;
+        } catch (IOException | NoSuchAlgorithmException ex) {
+            Logger.getLogger(ModPruneUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     
     private String trim(List<String> input) {
@@ -282,7 +327,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
     }
     
     private void delete_process() {
-        if(this.stagingFN == null || this.trimStage == null)
+        if(this.stagingDBR == null || this.stagingRES == null || this.trimStage == null)
             return; //Can't happen? This button should only be pressable after prune_process() initializes the datastructures.
         int res = JOptionPane.showConfirmDialog(null, 
                 "<html>Are you sure you want to delete staged files?<br>This process cannot be undone!</html>",
@@ -291,12 +336,18 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                 JOptionPane.WARNING_MESSAGE);
         if(res != JOptionPane.YES_OPTION)
             return;
-        this.stagingFN.forEach(str -> {
+        this.stagingDBR.forEach(str -> {
             try {
                 Files.deleteIfExists(Paths.get(str));
             } catch (IOException ex) {/*May not have access to file to delete it.*/}
         });
-        this.stagingFN.clear();
+        this.stagingDBR.clear();
+        this.stagingRES.forEach(str -> {
+            try {
+                Files.deleteIfExists(Paths.get(str));
+            } catch (IOException ex) {/*May not have access to file to delete it.*/}
+        });
+        this.stagingRES.clear();
         //trim files as appropriate
         //trimStage will be empty (but non-null) if the checkbox was not checked pre-prune process
         String modName = this.prop.getProperty("mod");
@@ -524,8 +575,8 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             
             @Override
             protected void done() {
-                if(stagingFN.isEmpty()) {
-                    outputText.append(prop.getProperty("mod") + " has no overlap with vanilla Grim Dawn! :)\n");
+                if(stagingDBR.isEmpty() && stagingRES.isEmpty()) {
+                    outputText.append(prop.getProperty("mod") + " has no overlap with Crate Entertainment files! :)\n");
                     outputText.updateUI();
                 }
                 exportButton.setEnabled(true);
@@ -556,7 +607,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             
             @Override
             protected void done() {
-                if(stagingFN.isEmpty()) {
+                if(stagingDBR.isEmpty() && stagingRES.isEmpty()) {
                     deleteButton.setEnabled(false);
                     trimStage.clear();
                 }
