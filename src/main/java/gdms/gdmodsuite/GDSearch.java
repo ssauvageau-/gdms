@@ -246,18 +246,6 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
     private String replaceLast(String txt, String regex, String repl) {
         return txt.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", repl);
     }
-
-    private void saveProperties(Properties p) {
-        try {
-            FileOutputStream fr = new FileOutputStream(this.file);
-            p.store(fr, "");
-            fr.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -413,7 +401,7 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
         if(this.fc.showOpenDialog(this) == 0) {
             this.install_dir = this.fc.getSelectedFile().getAbsolutePath();
             this.prop.setProperty("install", this.install_dir);
-            this.saveProperties(this.prop);
+            gdmsUtil.saveProperties(this.prop, this.file);
             this.search.setEnabled(true);
             this.recheckGDX();
         }

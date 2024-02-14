@@ -76,18 +76,6 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
         this.gdx2 = this.prop.getProperty("gdx2") != null && !this.prop.getProperty("gdx2").equals("0") && !this.prop.getProperty("gdx2").equals("");
         this.gdx3 = this.prop.getProperty("gdx3") != null && !this.prop.getProperty("gdx3").equals("0") && !this.prop.getProperty("gdx3").equals("");
     }
-
-    private void saveProperties(Properties p) {
-        try {
-            FileOutputStream fr = new FileOutputStream(this.file);
-            p.store(fr, "");
-            fr.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
     private synchronized void verify_process() {
         if(this.inputField.getText() == null || this.inputField.getText().equals("")) {
@@ -99,7 +87,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             return;
         }
         this.prop.setProperty("mod", this.inputField.getText());
-        saveProperties(this.prop);
+        gdmsUtil.saveProperties(this.prop, this.file);
         
         String modName = this.prop.getProperty("mod");
         
@@ -565,7 +553,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
         if(this.fc.showOpenDialog(this) == 0) {
             this.install_dir = this.fc.getSelectedFile().getAbsolutePath();
             this.prop.setProperty("install", this.install_dir);
-            this.saveProperties(this.prop);
+            gdmsUtil.saveProperties(this.prop, this.file);
             this.verifyButton.setEnabled(true);
             this.recheckGDX();
             this.installField.setText(install_dir);

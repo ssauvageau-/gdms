@@ -33,6 +33,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
     private javax.swing.JFileChooser fc;
     private final Properties prop;
     private String install_dir = "";
+    private String working_dir = "";
     private final File file = new File("gdms.cfg");
     private final Path gdlist = Paths.get("gddb.cfg");
     private final List<javax.swing.JButton> tools;
@@ -66,8 +67,13 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
             } else {
                 this.initLabel.setVisible(true);
             }
+            this.workdirButton.setEnabled(true);
         } else {
             this.toggleTools(false);
+        }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
         }
     }
 
@@ -139,6 +145,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         installButton = new javax.swing.JButton();
         initButton = new javax.swing.JButton();
         initLabel = new javax.swing.JLabel();
+        workdirButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(645, 323));
 
@@ -241,6 +248,15 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         initLabel.setText("<html>Install directory must be<br>set to initialize modding<br>suite configuration data.</html>");
         initLabel.setVisible(false);
 
+        workdirButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        workdirButton.setText("<html><center><b>Optional</b>:<br>Set Custom Working Directory</center></html>");
+        workdirButton.setEnabled(false);
+        workdirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                workdirButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,24 +295,20 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(installButton)
-                                .addContainerGap())
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(initButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(36, 36, 36)
+                        .addComponent(ModLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(installButton)
+                            .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(ModLabel))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(initLabel)))
-                        .addGap(17, 17, 17))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(initLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(initButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(22, 22, 22)))))
+                .addGap(17, 17, 17))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,9 +347,11 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                                 .addComponent(ModLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(installButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(initButton)))
-                        .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(initButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(initLabel)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -362,51 +376,31 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         if (this.fc.showOpenDialog(this) == 0) {
             this.install_dir = this.fc.getSelectedFile().getAbsolutePath();
             this.prop.setProperty("install", this.install_dir);
-            this.saveProperties(this.prop);
+            gdmsUtil.saveProperties(this.prop, this.file);
             this.initButton.setEnabled(true);
             this.initLabel.setVisible(false);
+            this.workdirButton.setEnabled(true);
             this.toggleTools(false);
         }
     }//GEN-LAST:event_installButtonActionPerformed
 
-    private void saveProperties(Properties p) {
-        try {
-            FileOutputStream fr = new FileOutputStream(this.file);
-            p.store(fr, "");
-            fr.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     private void walkFiles() {
         List<String> master = new ArrayList<>();
         try {
+            boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
             if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {
-                String dbr = this.install_dir + "\\database";
-                String res = this.install_dir + "\\resources";
+                String dbr = (useWork ? this.working_dir : this.install_dir) + "\\database";
+                String res = (useWork ? this.working_dir : this.install_dir) + "\\resources";
                 master.addAll(Files.walk(Paths.get(dbr)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(dbr, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
                 master.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
             }
-            if (this.prop.getProperty("gdx1") != null && this.prop.getProperty("gdx1").equals("1")) {
-                String dbr = this.install_dir + "\\mods\\gdx1\\database";
-                String res = this.install_dir + "\\mods\\gdx1\\resources";
-                master.addAll(Files.walk(Paths.get(dbr)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(dbr, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
-                master.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
-            }
-            if (this.prop.getProperty("gdx2") != null && this.prop.getProperty("gdx2").equals("1")) {
-                String dbr = this.install_dir + "\\mods\\gdx2\\database";
-                String res = this.install_dir + "\\mods\\gdx2\\resources";
-                master.addAll(Files.walk(Paths.get(dbr)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(dbr, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
-                master.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
-            }
-            if (this.prop.getProperty("gdx3") != null && this.prop.getProperty("gdx3").equals("1")) {
-                String dbr = this.install_dir + "\\mods\\gdx3\\database";
-                String res = this.install_dir + "\\mods\\gdx3\\resources";
-                master.addAll(Files.walk(Paths.get(dbr)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(dbr, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
-                master.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
+            for(int i = 1; i <= 3; i++) {
+                if(this.prop.getProperty("gdx" + i) != null && this.prop.getProperty("gdx" + i).equals("1")) {
+                    String dbr = (useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx" + i + "\\database";
+                    String res = (useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx" + i + "\\resources";
+                    master.addAll(Files.walk(Paths.get(dbr)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(dbr, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
+                    master.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
+                }
             }
             Files.write(this.gdlist, master, java.nio.charset.StandardCharsets.UTF_8);
         } catch (IOException ex) {}
@@ -428,7 +422,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         } else {
             this.prop.setProperty("gdx3", "0");
         }
-        this.saveProperties(this.prop);
+        gdmsUtil.saveProperties(this.prop, this.file);
         this.walkFiles();
         javax.swing.JOptionPane.showMessageDialog(
                 null,
@@ -439,6 +433,24 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         this.initLabel.setVisible(false);
         this.toggleTools(true);
     }//GEN-LAST:event_initButtonActionPerformed
+
+    private void workdirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workdirButtonActionPerformed
+        this.fc = new javax.swing.JFileChooser("Select Custom Working Directory");
+        this.fc.setFileSelectionMode(1);
+        String t_working = this.prop.getProperty("working");
+        if (t_working != null && !t_working.equals("")) {
+            this.working_dir = t_working;
+            this.fc.setCurrentDirectory(new File(this.working_dir));
+        }
+        if (this.fc.showOpenDialog(this) == 0) {
+            this.working_dir = this.fc.getSelectedFile().getAbsolutePath();
+            this.prop.setProperty("working", this.working_dir);
+            gdmsUtil.saveProperties(this.prop, this.file);
+            this.initButton.setEnabled(true);
+            this.initLabel.setVisible(false);
+            this.toggleTools(false);
+        }
+    }//GEN-LAST:event_workdirButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DiscordButton;
@@ -457,6 +469,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
     private javax.swing.JButton qstButton;
     private javax.swing.JButton repairButton;
     private javax.swing.JButton texButton;
+    private javax.swing.JButton workdirButton;
     private javax.swing.JButton worldButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -38,7 +38,7 @@ public class GDModSuite {
             prop.load(fis);
             if(!prop.getProperty("gdms.version").equals("0.9.3")) {
                 prop.setProperty("gdms.version", "0.9.3");
-                saveProperties(prop, file);
+                gdmsUtil.saveProperties(prop, file);
             }
         } catch(FileNotFoundException ex){
             try {
@@ -67,16 +67,6 @@ public class GDModSuite {
             }
             createAndShowGUI(prop);
         });
-    }
-    
-    private static void saveProperties(Properties p, File file) {
-        try (FileOutputStream fr = new FileOutputStream(file)) {
-            p.store(fr, "");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(GDSearch.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     private static void createAndShowGUI(Properties prop) {
