@@ -36,8 +36,8 @@ public class GDModSuite {
         File file = new File(fn);
         try(FileInputStream fis = new FileInputStream(fn)) {
             prop.load(fis);
-            if(!prop.getProperty("gdms.version").equals("0.9.2")) {
-                prop.setProperty("gdms.version", "0.9.2");
+            if(!prop.getProperty("gdms.version").equals("0.9.3")) {
+                prop.setProperty("gdms.version", "0.9.3");
                 saveProperties(prop, file);
             }
         } catch(FileNotFoundException ex){
@@ -46,7 +46,7 @@ public class GDModSuite {
                         Paths.get(fn), 
                         Arrays.asList(
                                 "gdms.name=Grim Dawn Modding Suite",
-                                "gdms.version=0.9.2",
+                                "gdms.version=0.9.3",
                                 "install=",
                                 "gdx1=",
                                 "gdx2=",
@@ -54,6 +54,7 @@ public class GDModSuite {
                                 "mod="), 
                         StandardCharsets.UTF_8
                 );
+                prop.load(new FileInputStream(fn));
             } catch (IOException ex1) {}
         } catch(IOException ex) {}
         
