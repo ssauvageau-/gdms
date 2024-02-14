@@ -6,7 +6,7 @@ package gdms.gdmodsuite;
 
 /**
  *
- * @author smark
+ * @author cenorayd
  */
 public interface Readyable {
     public void ready();
