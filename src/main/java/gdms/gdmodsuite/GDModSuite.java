@@ -10,7 +10,6 @@ import java.awt.event.ComponentAdapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -33,11 +32,13 @@ public class GDModSuite {
     public static void main(String[] args) {
         Properties prop = new Properties();
         String fn = "gdms.cfg";
+        String name = "Grim Dawn Modding Suite";
+        String version = "0.9.4";
         File file = new File(fn);
         try(FileInputStream fis = new FileInputStream(fn)) {
             prop.load(fis);
-            if(!prop.getProperty("gdms.version").equals("0.9.3")) {
-                prop.setProperty("gdms.version", "0.9.3");
+            if(!prop.getProperty("gdms.version").equals(version)) {
+                prop.setProperty("gdms.version", version);
                 gdmsUtil.saveProperties(prop, file);
             }
         } catch(FileNotFoundException ex){
@@ -45,8 +46,8 @@ public class GDModSuite {
                 Files.write(
                         Paths.get(fn), 
                         Arrays.asList(
-                                "gdms.name=Grim Dawn Modding Suite",
-                                "gdms.version=0.9.3",
+                                "gdms.name="+name,
+                                "gdms.version="+version,
                                 "install=",
                                 "gdx1=",
                                 "gdx2=",

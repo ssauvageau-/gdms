@@ -39,6 +39,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
     private final File file;
     private final String outdir = "prune\\";
     private String install_dir = "";
+    private String working_dir = "";
     private boolean gdx1, gdx2, gdx3;
     private javax.swing.JFileChooser fc;
     private ArrayList<String> stagingDBR;
@@ -60,6 +61,10 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             this.pruneButton.setEnabled(true);
             this.installField.setText(install_dir);
         }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
+        }
         this.recheckGDX();
     }
     
@@ -71,6 +76,10 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             this.install_dir = t_install;
             this.pruneButton.setEnabled(true);
             this.installField.setText(install_dir);
+        }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
         }
     }
     
@@ -113,9 +122,11 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
              ***/
             this.outputText.append("Processing " + modName + " Files...\n");
             this.outputText.updateUI();
+            
+            boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
             ArrayList<String> modMaster = new ArrayList<>();
-            String modDBR = this.install_dir + "\\mods\\" + modName + "\\database";
-            String modRes = this.install_dir + "\\mods\\" + modName + "\\resources";
+            String modDBR = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database";
+            String modRes = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources";
             if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {                
                 modMaster.addAll(Files.walk(Paths.get(modRes)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(modRes, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
                 modMaster.addAll(Files.walk(Paths.get(modDBR)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(modDBR, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
@@ -134,7 +145,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                     if(modFN.endsWith(".dbr")) {
                         // All this garbage could be thrown in a method of its own. 
                         // Should do so to clean up code later.
-                        File gdx3F = new File(this.install_dir + "\\mods\\gdx3\\database\\" + modFN);
+                        File gdx3F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx3\\database\\" + modFN);
                         if(gdx3 && gdx3F.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdx3F.getPath()))))) {
@@ -146,14 +157,14 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                                 if(this.trimCB.isSelected() && !this.autotrimCB.isSelected())
                                     this.trimStage.put(modFN, modTrim);
                                 else if(this.trimCB.isSelected() && this.autotrimCB.isSelected()) { //in theory only need to check autotrimCB, but better safe than sorry
-                                    String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
+                                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + modFN;
                                     FileOutputStream fos = new FileOutputStream(new File(path));
                                     fos.write(modTrim.getBytes());
                                 }
                             }
                             continue; //do not waste time checking earlier content if we found a matching file in newer crate content
                         }
-                        File gdx2F = new File(this.install_dir + "\\mods\\gdx2\\database\\" + modFN);
+                        File gdx2F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx2\\database\\" + modFN);
                         if(gdx2 && gdx2F.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdx2F.getPath()))))) {
@@ -165,14 +176,14 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                                 if(this.trimCB.isSelected() && !this.autotrimCB.isSelected())
                                     this.trimStage.put(modFN, modTrim);
                                 else if(this.trimCB.isSelected() && this.autotrimCB.isSelected()) { //in theory only need to check autotrimCB, but better safe than sorry
-                                    String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
+                                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + modFN;
                                     FileOutputStream fos = new FileOutputStream(new File(path));
                                     fos.write(modTrim.getBytes());
                                 }
                             }
                             continue; //do not waste time checking earlier content if we found a matching file in newer crate content
                         }
-                        File gdx1F = new File(this.install_dir + "\\mods\\gdx1\\database\\" + modFN);
+                        File gdx1F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx1\\database\\" + modFN);
                         if(gdx1 && gdx1F.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdx1F.getPath()))))) {
@@ -184,14 +195,14 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                                 if(this.trimCB.isSelected() && !this.autotrimCB.isSelected())
                                     this.trimStage.put(modFN, modTrim);
                                 else if(this.trimCB.isSelected() && this.autotrimCB.isSelected()) { //in theory only need to check autotrimCB, but better safe than sorry
-                                    String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
+                                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + modFN;
                                     FileOutputStream fos = new FileOutputStream(new File(path));
                                     fos.write(modTrim.getBytes());
                                 }
                             }
                             continue; //do not waste time checking earlier content if we found a matching file in newer crate content
                         }
-                        File gdv = new File(this.install_dir + "\\database\\" + modFN);
+                        File gdv = new File((useWork ? this.working_dir : this.install_dir) + "\\database\\" + modFN);
                         if(gdv.isFile()) {
                             String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
                             if(modTrim.equals(this.trim(Files.readAllLines(Paths.get(gdv.getPath()))))) {
@@ -203,7 +214,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                                 if(this.trimCB.isSelected() && !this.autotrimCB.isSelected())
                                     this.trimStage.put(modFN, modTrim);
                                 else if(this.trimCB.isSelected() && this.autotrimCB.isSelected()) { //in theory only need to check autotrimCB, but better safe than sorry
-                                    String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
+                                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + modFN;
                                     FileOutputStream fos = new FileOutputStream(new File(path));
                                     fos.write(modTrim.getBytes());
                                 }
@@ -211,30 +222,30 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                         }
                     }
                     else if (!(modFN.endsWith(".arc") || modFN.endsWith(".arz") || modFN.endsWith(".dll"))) {
-                        File gdx3F = new File(this.install_dir + "\\mods\\gdx3\\resources\\" + modFN);
+                        File gdx3F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx3\\resources\\" + modFN);
                         if(gdx3 && gdx3F.isFile() && 
-                                hashEquality(gdx3F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdx3F, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX3 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
-                        File gdx2F = new File(this.install_dir + "\\mods\\gdx2\\resources\\" + modFN);
+                        File gdx2F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx2\\resources\\" + modFN);
                         if(gdx2 && gdx2F.isFile() && 
-                                hashEquality(gdx2F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdx2F, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX2 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
-                        File gdx1F = new File(this.install_dir + "\\mods\\gdx1\\resources\\" + modFN);
+                        File gdx1F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx1\\resources\\" + modFN);
                         if(gdx1 && gdx1F.isFile() && 
-                                hashEquality(gdx1F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdx1F, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX1 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
-                        File gdvF = new File(this.install_dir + "\\resources\\" + modFN);
+                        File gdvF = new File((useWork ? this.working_dir : this.install_dir) + "\\resources\\" + modFN);
                         if(gdvF.isFile() && 
-                                hashEquality(gdvF, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdvF, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a Vanilla GD file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
@@ -248,7 +259,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                         if(!this.autotrimCB.isSelected())
                             this.trimStage.put(modFN, modTrim);
                         else {
-                            String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
+                            String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + modFN;
                             FileOutputStream fos = new FileOutputStream(new File(path));
                             fos.write(modTrim.getBytes());
                         }
@@ -286,6 +297,13 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             else switch (arr1) {
                 case "" -> {}
                 case "0", "0.0", "0.000000" -> {}
+                case "Physical;Pierce;Elemental;Cold;Fire;Poison;Lightning;Life;Chaos;Aether;Stun" -> {}
+                case "None;Quest;Boss;Custom;Regular" -> {}
+                case "Box;Sphere;Cylinder;Capsule" -> {}
+                case "R Hand;L Hand;Upper Body;Lower Body;Head;Forearm;Particle1;Particle2;Particle3;Target;SpecialHit01;SpecialHit02;SpecialHit03;SpecialHit04;" -> {}
+                case "Melee;Short;Moderate;Long;Maximum;Boss;" -> {}
+                case "Default;Point;Object;Target" -> {}
+                case "None;Fire;Poison;" -> {}
                 default -> sb.append(line).append("\n");
             }
         }
@@ -340,9 +358,10 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
         //trim files as appropriate
         //trimStage will be empty (but non-null) if the checkbox was not checked pre-prune process
         String modName = this.prop.getProperty("mod");
+        boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
         this.trimStage.entrySet().forEach(entry -> {
             try {
-                String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + (String)entry.getKey();
+                String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + (String)entry.getKey();
                 FileOutputStream fos = new FileOutputStream(new File(path));
                 fos.write(((String)entry.getValue()).getBytes());
             } catch (FileNotFoundException ex) {

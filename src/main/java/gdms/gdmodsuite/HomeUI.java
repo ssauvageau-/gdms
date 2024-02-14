@@ -8,8 +8,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -146,6 +144,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         initButton = new javax.swing.JButton();
         initLabel = new javax.swing.JLabel();
         workdirButton = new javax.swing.JButton();
+        removeWorkDirButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(645, 323));
 
@@ -257,6 +256,13 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
             }
         });
 
+        removeWorkDirButton.setText("<html><center><b>Optional</b>:<br>Remove Custom Working Directory</center></html>");
+        removeWorkDirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeWorkDirButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -296,19 +302,24 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(ModLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(installButton)
-                            .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(initLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(initButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(22, 22, 22)))))
-                .addGap(17, 17, 17))
+                                .addGap(36, 36, 36)
+                                .addComponent(ModLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(removeWorkDirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(installButton)
+                                        .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(initLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(initButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(45, 45, 45))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +359,9 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(installButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeWorkDirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(initButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -447,10 +460,17 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
             this.prop.setProperty("working", this.working_dir);
             gdmsUtil.saveProperties(this.prop, this.file);
             this.initButton.setEnabled(true);
+            this.removeWorkDirButton.setEnabled(true);
             this.initLabel.setVisible(false);
             this.toggleTools(false);
         }
     }//GEN-LAST:event_workdirButtonActionPerformed
+
+    private void removeWorkDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeWorkDirButtonActionPerformed
+        this.prop.setProperty("working", "");
+        gdmsUtil.saveProperties(this.prop, this.file);
+        this.removeWorkDirButton.setEnabled(false);
+    }//GEN-LAST:event_removeWorkDirButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DiscordButton;
@@ -467,6 +487,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
     private javax.swing.JButton modelButton;
     private javax.swing.JButton psButton;
     private javax.swing.JButton qstButton;
+    private javax.swing.JButton removeWorkDirButton;
     private javax.swing.JButton repairButton;
     private javax.swing.JButton texButton;
     private javax.swing.JButton workdirButton;

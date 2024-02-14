@@ -35,6 +35,7 @@ import javax.swing.SwingWorker;
 public class ModCheckUI extends javax.swing.JPanel implements Readyable {
     private javax.swing.JFileChooser fc;
     private String install_dir = "";
+    private String working_dir = "";
     private final Properties prop;
     private final File file;
     private final Path gdlist;
@@ -57,6 +58,10 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             this.verifyButton.setEnabled(true);
             this.installField.setText(install_dir);
         }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
+        }
         this.recheckGDX();
     }
     
@@ -68,6 +73,10 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             this.install_dir = t_install;
             this.verifyButton.setEnabled(true);
             this.installField.setText(install_dir);
+        }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
         }
     }
     
@@ -91,7 +100,8 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
         
         String modName = this.prop.getProperty("mod");
         
-        if(!Files.exists(Paths.get(this.install_dir, "\\mods\\", modName))) {
+        boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
+        if(!Files.exists(Paths.get((useWork ? this.working_dir : this.install_dir), "\\mods\\", modName))) {
             javax.swing.JOptionPane.showMessageDialog(
                 null,
                 "Could not find the mod given in the bottom\nfield of the Config Tab; please check your spelling!",
@@ -146,8 +156,8 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             this.outputText.append("Processing " + modName + " Files...\n");
             this.outputText.updateUI();
             if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {
-                String dbr = this.install_dir + "\\mods\\" + modName + "\\database";
-                String res = this.install_dir + "\\mods\\" + modName + "\\resources";
+                String dbr = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database";
+                String res = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources";
                 
                 modMaster.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
                 for(String str : modMaster) 
@@ -165,7 +175,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             for(String fn : modMaster) {
                 boolean ignoreBaseSpeedChanges = false;
                 if(fn.endsWith(".dbr")) { //just checking in case we hit a .arz or something
-                    String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + fn;
+                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database\\" + fn;
                     int lnum = 1;
                     for(String line : Files.readAllLines(Paths.get(path))) {
                         if (line.contains(".tpl")) {
@@ -230,7 +240,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                     }
                 }
                 else if(fn.endsWith(".lua")) {
-                    String path = this.install_dir + "\\mods\\" + modName + "\\resources\\" + fn;
+                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + fn;
                     int lnum = 1;
                     for(String line : Files.readAllLines(Paths.get(path))) {
                         if(line.contains("\"")) {
@@ -253,7 +263,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                     }
                 }
                 else if (fn.endsWith(".cnv") || fn.endsWith(".qst")) {
-                    String path = this.install_dir + "\\mods\\" + modName + "\\resources\\" + fn;
+                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + fn;
                     for(String line : Files.readAllLines(Paths.get(path), StandardCharsets.ISO_8859_1)) {
                         line = line.toLowerCase();
                         Pattern p = Pattern.compile("[a-z0-9_-]+(\\/[a-z0-9_-]*)*\\.[a-z][a-z][a-z]"); //regex = match filepaths 
@@ -327,7 +337,8 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
     }
     
     private synchronized void tagBuilder(String addedPath, String str, Set<String> set) throws IOException {
-        for(String line : Files.readAllLines(Paths.get(this.install_dir, addedPath, str.replace("/","\\")))) {
+        boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
+        for(String line : Files.readAllLines(Paths.get((useWork ? this.working_dir : this.install_dir), addedPath, str.replace("/","\\")))) {
             if (line.length() > 4 && line.contains("=")) {
                 String[] tmp = line.split("=");
                 set.add(tmp[0]);
