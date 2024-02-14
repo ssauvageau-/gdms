@@ -220,18 +220,6 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                                     fos.write(modTrim.getBytes());
                                 }
                             }
-                            continue; //do not waste time checking earlier content if we found a matching file in newer crate content
-                        }
-                        //duplicate file was not found, but consider trimming
-                        if(this.trimCB.isSelected()) {
-                            String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
-                            if(!this.autotrimCB.isSelected())
-                                this.trimStage.put(modFN, modTrim);
-                            else {
-                                String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
-                                FileOutputStream fos = new FileOutputStream(new File(path));
-                                fos.write(modTrim.getBytes());
-                            }
                         }
                     }
                     else if (!(modFN.endsWith(".arc") || modFN.endsWith(".arz") || modFN.endsWith(".dll"))) {
@@ -262,6 +250,19 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a Vanilla GD file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
+                        }
+                    }
+                }
+                else {
+                    //duplicate file was not found, but consider trimming
+                    if(this.trimCB.isSelected() && modFN.endsWith(".dbr")) {
+                        String modTrim = this.trim(Files.readAllLines(Paths.get(modDBR + "\\" + modFN)));
+                        if(!this.autotrimCB.isSelected())
+                            this.trimStage.put(modFN, modTrim);
+                        else {
+                            String path = this.install_dir + "\\mods\\" + modName + "\\database\\" + modFN;
+                            FileOutputStream fos = new FileOutputStream(new File(path));
+                            fos.write(modTrim.getBytes());
                         }
                     }
                 }
@@ -296,7 +297,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             if(null == arr1);
             else switch (arr1) {
                 case "" -> {}
-                case "0", "0.0", "0.00000" -> {}
+                case "0", "0.0", "0.000000" -> {}
                 default -> sb.append(line).append("\n");
             }
         }
