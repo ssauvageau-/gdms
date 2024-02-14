@@ -126,7 +126,7 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
             ArrayList<String> modMaster = new ArrayList<>();
             String modDBR = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database";
-            String modRes = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources";
+            String modRes = this.install_dir + "\\mods\\" + modName + "\\resources";
             if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {                
                 modMaster.addAll(Files.walk(Paths.get(modRes)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(modRes, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
                 modMaster.addAll(Files.walk(Paths.get(modDBR)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(modDBR, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).map(s->s.toLowerCase()).collect(Collectors.toList()));
@@ -224,28 +224,28 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
                     else if (!(modFN.endsWith(".arc") || modFN.endsWith(".arz") || modFN.endsWith(".dll"))) {
                         File gdx3F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx3\\resources\\" + modFN);
                         if(gdx3 && gdx3F.isFile() && 
-                                hashEquality(gdx3F, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdx3F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX3 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
                         File gdx2F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx2\\resources\\" + modFN);
                         if(gdx2 && gdx2F.isFile() && 
-                                hashEquality(gdx2F, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdx2F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX2 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
                         File gdx1F = new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\gdx1\\resources\\" + modFN);
                         if(gdx1 && gdx1F.isFile() && 
-                                hashEquality(gdx1F, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdx1F, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a GDX1 file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();
                         }
                         File gdvF = new File((useWork ? this.working_dir : this.install_dir) + "\\resources\\" + modFN);
                         if(gdvF.isFile() && 
-                                hashEquality(gdvF, new File((useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + modFN))) {
+                                hashEquality(gdvF, new File(this.install_dir + "\\mods\\" + modName + "\\resources\\" + modFN))) {
                             this.stagingRES.add(modRes + "\\" + modFN);
                             this.outputText.append("Found Resource File with identical SHA-256 hash to a Vanilla GD file:\n\t" + modFN + "\nStaged for deletion.\n");
                             this.outputText.updateUI();

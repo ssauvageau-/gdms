@@ -397,10 +397,9 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         }
     }//GEN-LAST:event_installButtonActionPerformed
 
-    private void walkFiles() {
+    private void walkFiles(boolean useWork) {
         List<String> master = new ArrayList<>();
         try {
-            boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
             if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {
                 String dbr = (useWork ? this.working_dir : this.install_dir) + "\\database";
                 String res = (useWork ? this.working_dir : this.install_dir) + "\\resources";
@@ -420,23 +419,24 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
     }
 
     private void initButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initButtonActionPerformed
-        if (Files.exists(Paths.get(this.install_dir, "\\mods\\gdx1\\database"))) {
+        boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
+        if (Files.exists(Paths.get((useWork ? this.working_dir : this.install_dir), "\\mods\\gdx1\\database"))) {
             this.prop.setProperty("gdx1", "1");
         } else {
             this.prop.setProperty("gdx1", "0");
         }
-        if (Files.exists(Paths.get(this.install_dir, "\\mods\\gdx2\\database"))) {
+        if (Files.exists(Paths.get((useWork ? this.working_dir : this.install_dir), "\\mods\\gdx2\\database"))) {
             this.prop.setProperty("gdx2", "1");
         } else {
             this.prop.setProperty("gdx2", "0");
         }
-        if (Files.exists(Paths.get(this.install_dir, "\\mods\\gdx3\\database"))) {
+        if (Files.exists(Paths.get((useWork ? this.working_dir : this.install_dir), "\\mods\\gdx3\\database"))) {
             this.prop.setProperty("gdx3", "1");
         } else {
             this.prop.setProperty("gdx3", "0");
         }
         gdmsUtil.saveProperties(this.prop, this.file);
-        this.walkFiles();
+        this.walkFiles(useWork);
         javax.swing.JOptionPane.showMessageDialog(
                 null,
                 "GDMS Config Files updated successfully.",

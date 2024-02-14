@@ -151,13 +151,13 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
             Set<String> modTags = Collections.synchronizedSet(new HashSet<>());
             
             /***
-            Mod DBR Reference List
+            Mod Reference List
             ***/
             this.outputText.append("Processing " + modName + " Files...\n");
             this.outputText.updateUI();
             if (this.prop.getProperty("install") != null && !this.prop.getProperty("install").equals("")) {
                 String dbr = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\database";
-                String res = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources";
+                String res = this.install_dir + "\\mods\\" + modName + "\\resources";
                 
                 modMaster.addAll(Files.walk(Paths.get(res)).filter(Files::isRegularFile).map(Path::toString).map(s -> s.replace(res, "")).map(s -> s.replace("\\", "/")).map(s -> s.replaceFirst("/", "")).collect(Collectors.toList()));
                 for(String str : modMaster) 
@@ -240,7 +240,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                     }
                 }
                 else if(fn.endsWith(".lua")) {
-                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + fn;
+                    String path = this.install_dir + "\\mods\\" + modName + "\\resources\\" + fn;
                     int lnum = 1;
                     for(String line : Files.readAllLines(Paths.get(path))) {
                         if(line.contains("\"")) {
@@ -263,7 +263,7 @@ public class ModCheckUI extends javax.swing.JPanel implements Readyable {
                     }
                 }
                 else if (fn.endsWith(".cnv") || fn.endsWith(".qst")) {
-                    String path = (useWork ? this.working_dir : this.install_dir) + "\\mods\\" + modName + "\\resources\\" + fn;
+                    String path = this.install_dir + "\\mods\\" + modName + "\\resources\\" + fn;
                     for(String line : Files.readAllLines(Paths.get(path), StandardCharsets.ISO_8859_1)) {
                         line = line.toLowerCase();
                         Pattern p = Pattern.compile("[a-z0-9_-]+(\\/[a-z0-9_-]*)*\\.[a-z][a-z][a-z]"); //regex = match filepaths 
