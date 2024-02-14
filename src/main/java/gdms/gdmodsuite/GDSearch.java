@@ -29,6 +29,7 @@ import javax.swing.SwingWorker;
 public class GDSearch extends javax.swing.JPanel implements Readyable {
     private javax.swing.JFileChooser fc;
     private String install_dir = "";
+    private String working_dir = "";
     private final String DBR = "\\database";
     private final String text = "\\resources\\text_en";
     private final String mods = "\\mods";
@@ -52,6 +53,10 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
             this.install_dir = t_install;
             this.search.setEnabled(true);
         }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
+        }
     }
     
     @Override
@@ -61,6 +66,10 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
         if(t_install != null && !t_install.equals("")) {
             this.install_dir = t_install;
             this.search.setEnabled(true);
+        }
+        String t_work = this.prop.getProperty("working");
+        if (t_work != null && !t_work.equals("")) {
+            this.working_dir = t_work;
         }
     }
     
@@ -113,35 +122,38 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
         String pattern = this.input.getText();
         if(pattern.equals(""))
             return;
+        if(fieldCB.isSelected())
+            pattern = "," + pattern;
         this.output.setText("Output:\n");
         this.output.updateUI();
         this.search.setEnabled(false);
         this.export.setEnabled(false);
         this.clear.setEnabled(false);
         try {
+            boolean useWork = (this.prop.getProperty("working") != null && !this.prop.getProperty("working").equals(""));
             if(this.dbr_cb.isSelected()) {
                 if(this.vanilla_cb.isSelected()) {
                     this.output.append("Scanning Vanilla DBR Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.DBR, true))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.DBR, true))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
                 if(this.gdx1_cb.isSelected()) {
                     this.output.append("Scanning GDX1 DBR Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.mods+this.gdx1+this.DBR, true))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.mods+this.gdx1+this.DBR, true))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
                 if(this.gdx2_cb.isSelected()) {
                     this.output.append("Scanning GDX2 DBR Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.mods+this.gdx2+this.DBR, true))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.mods+this.gdx2+this.DBR, true))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
                 if(this.gdx3_cb.isSelected()) {
                     this.output.append("Scanning GDX3 DBR Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.mods+this.gdx3+this.DBR, true))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.mods+this.gdx3+this.DBR, true))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
             }
@@ -149,25 +161,25 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
                 if(this.vanilla_cb.isSelected()) {
                     this.output.append("Scanning Vanilla Text Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.text, false))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.text, false))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
                 if(this.gdx1_cb.isSelected()) {
                     this.output.append("Scanning GDX1 Text Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.mods+this.gdx1+this.text, false))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.mods+this.gdx1+this.text, false))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
                 if(this.gdx2_cb.isSelected()) {
                     this.output.append("Scanning GDX2 Text Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.mods+this.gdx2+this.text, false))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.mods+this.gdx2+this.text, false))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
                 if(this.gdx3_cb.isSelected()) {
                     this.output.append("Scanning GDX3 Text Entries\n");
                     this.output.updateUI();
-                    for(String str : search(pattern, this.install_dir+this.mods+this.gdx3+this.text, false))
+                    for(String str : search(pattern, (useWork ? this.working_dir : this.install_dir)+this.mods+this.gdx3+this.text, false))
                         this.output.append(str.replaceFirst("\\\\", "").replaceAll("\\\\", "/") + "\n");
                 }
             }
@@ -189,7 +201,6 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
         File f = new File(outdir + new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".txt");
         StringBuilder sb = new StringBuilder().append("Searched for ").append(this.input.getText()).append(" in ");
         outputTXT = outputTXT.replace("Output:\n", "");
-        outputTXT = outputTXT.replace("*Searching in " + this.install_dir + "\n", "");
         if(this.dbr_cb.isSelected()) {
             if(this.vanilla_cb.isSelected()) {
                 sb.append("Vanilla Database Records, ");
@@ -269,6 +280,8 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
         search = new javax.swing.JButton();
         export = new javax.swing.JButton();
         clear = new javax.swing.JButton();
+        fieldCB = new javax.swing.JCheckBox();
+        smartQueryExplButton = new javax.swing.JButton();
 
         output.setEditable(false);
         output.setBackground(new java.awt.Color(255, 255, 255));
@@ -328,6 +341,16 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
             }
         });
 
+        fieldCB.setText("Query Start of Entries Only");
+
+        smartQueryExplButton.setText("?");
+        smartQueryExplButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        smartQueryExplButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smartQueryExplButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -337,25 +360,33 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(input)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dir)
+                            .addComponent(input)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dbr_cb)
-                                    .addComponent(text_cb)
-                                    .addComponent(search)
-                                    .addComponent(export)
-                                    .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(gdx1_cb)
-                                    .addComponent(vanilla_cb)
-                                    .addComponent(gdx2_cb)
-                                    .addComponent(gdx3_cb))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                    .addComponent(dir)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(dbr_cb)
+                                            .addComponent(text_cb)
+                                            .addComponent(search)
+                                            .addComponent(export)
+                                            .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(33, 33, 33)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(gdx1_cb)
+                                            .addComponent(vanilla_cb)
+                                            .addComponent(gdx2_cb)
+                                            .addComponent(gdx3_cb))))
+                                .addGap(0, 27, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(fieldCB)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(smartQueryExplButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,7 +416,11 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
                             .addComponent(export))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(clear)
-                        .addGap(0, 118, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fieldCB)
+                            .addComponent(smartQueryExplButton))
+                        .addGap(0, 92, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -435,11 +470,28 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
         this.export.setEnabled(false);
     }//GEN-LAST:event_clearActionPerformed
 
+    private void smartQueryExplButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smartQueryExplButtonActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(
+                null,
+                "<html>If searching for a field of a DBR entry, such as text tags,"
+                        + "<br>this will make the search smarter by only matching text"
+                        + "<br>that is the immediate first entry of a DBR field."
+                        + "<br><br>For instance, a search of 'test' without this feature"
+                        + "<br>will find all iterations of the phrase 'test', including"
+                        + "<br>'GreatestMonsterKilled', which may not be desirable."
+                        + "<br><br>With this checkbox checked, only entries that"
+                        + "<br>lead with 'test' will be considered, e.g.,"
+                        + "<br>'someField,test,'</html>",
+                "GDMS Version: " + this.prop.getProperty("gdms.version"),
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_smartQueryExplButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clear;
     private javax.swing.JCheckBox dbr_cb;
     private javax.swing.JButton dir;
     private javax.swing.JButton export;
+    private javax.swing.JCheckBox fieldCB;
     private javax.swing.JCheckBox gdx1_cb;
     private javax.swing.JCheckBox gdx2_cb;
     private javax.swing.JCheckBox gdx3_cb;
@@ -447,6 +499,7 @@ public class GDSearch extends javax.swing.JPanel implements Readyable {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea output;
     private javax.swing.JButton search;
+    private javax.swing.JButton smartQueryExplButton;
     private javax.swing.JCheckBox text_cb;
     private javax.swing.JCheckBox vanilla_cb;
     // End of variables declaration//GEN-END:variables
