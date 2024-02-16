@@ -288,7 +288,10 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
     
     private String trim(List<String> input) {
         StringBuilder sb = new StringBuilder();
+        boolean isST = false;
         for(String line : input) {
+            if(line.contains("Class,SkillTree,"))
+                isST = true; //Skilltrees shouldn't have their initial skill levels ("0", usually) removed - results in UI errors.
             String[] spl = line.split(",");
             if(spl.length == 1)
                 continue;
@@ -296,7 +299,10 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
             if(null == arr1);
             else switch (arr1) {
                 case "" -> {}
-                case "0", "0.0", "0.000000" -> {}
+                case "0", "0.0", "0.000000" -> {
+                    if(!isST);
+                    else sb.append(line).append("\n");
+                }
                 case "Physical;Pierce;Elemental;Cold;Fire;Poison;Lightning;Life;Chaos;Aether;Stun" -> {}
                 case "None;Quest;Boss;Custom;Regular" -> {}
                 case "Box;Sphere;Cylinder;Capsule" -> {}
