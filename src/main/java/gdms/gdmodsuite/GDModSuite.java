@@ -33,7 +33,7 @@ public class GDModSuite {
         Properties prop = new Properties();
         String fn = "gdms.cfg";
         String name = "Grim Dawn Modding Suite";
-        String version = "0.9.4";
+        String version = "0.9.5";
         File file = new File(fn);
         try(FileInputStream fis = new FileInputStream(fn)) {
             prop.load(fis);

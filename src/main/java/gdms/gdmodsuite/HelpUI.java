@@ -202,29 +202,23 @@ public class HelpUI extends javax.swing.JPanel {
 
         tabbedPane.addTab("Downloads", new javax.swing.ImageIcon(getClass().getResource("/images/appbar.download.png")), downloads, "Useful community-made files to download."); // NOI18N
 
+        videos.setLayout(new java.awt.GridBagLayout());
+
         masteryVideo.setText("Making a Mastery");
+        masteryVideo.setMinimumSize(new java.awt.Dimension(0, 0));
+        masteryVideo.setPreferredSize(new java.awt.Dimension(40, 23));
         masteryVideo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 masteryVideoMouseClicked(evt);
             }
         });
-
-        javax.swing.GroupLayout videosLayout = new javax.swing.GroupLayout(videos);
-        videos.setLayout(videosLayout);
-        videosLayout.setHorizontalGroup(
-            videosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(videosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(masteryVideo, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        videosLayout.setVerticalGroup(
-            videosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(videosLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(masteryVideo)
-                .addContainerGap(197, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 567;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        videos.add(masteryVideo, gridBagConstraints);
 
         tabbedPane.addTab("Videos", new javax.swing.ImageIcon(getClass().getResource("/images/appbar.youtube.play.png")), videos, "Community-made tutorial videos for modding."); // NOI18N
 

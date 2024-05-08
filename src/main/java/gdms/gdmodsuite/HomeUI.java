@@ -125,6 +125,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         amButton = new javax.swing.JButton();
         gdButton = new javax.swing.JButton();
@@ -136,9 +137,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         qstButton = new javax.swing.JButton();
         texButton = new javax.swing.JButton();
         GDLabel = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         ModLabel = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
         DiscordButton = new javax.swing.JButton();
         installButton = new javax.swing.JButton();
         initButton = new javax.swing.JButton();
@@ -147,48 +146,87 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         removeWorkDirButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(700, 350));
+        java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
+        layout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0};
+        layout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        setLayout(layout);
 
         amButton.setMnemonic(KeyEvent.VK_A);
         amButton.setText("Launch Asset Manager (ALT+A)");
         amButton.addActionListener((ActionEvent e) -> {
             launch("AssetManager.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipady = 8;
+        add(amButton, gridBagConstraints);
 
         gdButton.setMnemonic(KeyEvent.VK_G);
         gdButton.setText("Launch Grim Dawn (ALT+G)");
         gdButton.addActionListener((ActionEvent e) -> {
             launch("Grim Dawn.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.ipady = 8;
+        add(gdButton, gridBagConstraints);
 
         convButton.setMnemonic(KeyEvent.VK_C);
         convButton.setText("Launch Conversation Editor (ALT+C)");
         convButton.addActionListener((ActionEvent e) -> {
             launch("ConversationEditor.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.ipady = 8;
+        add(convButton, gridBagConstraints);
 
         modelButton.setMnemonic(KeyEvent.VK_M);
         modelButton.setText("Launch Model Viewer (ALT+M)");
         modelButton.addActionListener((ActionEvent e) -> {
             launch("Viewer.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.ipady = 8;
+        add(modelButton, gridBagConstraints);
 
         repairButton.setMnemonic(KeyEvent.VK_R);
         repairButton.setText("Launch Repair Process (ALT+R)");
         repairButton.addActionListener((ActionEvent e) -> {
             launch("Repair.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.ipady = 8;
+        add(repairButton, gridBagConstraints);
 
         worldButton.setMnemonic(KeyEvent.VK_W);
         worldButton.setText("Launch World Editor (ALT+W)");
         worldButton.addActionListener((ActionEvent e) -> {
             launch("Editor.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 14;
+        gridBagConstraints.ipady = 8;
+        add(worldButton, gridBagConstraints);
 
         psButton.setMnemonic(KeyEvent.VK_P);
         psButton.setText("Launch PSEditor (ALT+P)");
         psButton.addActionListener((ActionEvent e) -> {
             launch("PSEditor.exe");
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 16;
+        gridBagConstraints.ipady = 8;
+        add(psButton, gridBagConstraints);
 
         qstButton.setMnemonic(KeyEvent.VK_Q);
         qstButton.setText("Launch Quest Editor (ALT+Q)");
@@ -200,6 +238,11 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                 qstButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 18;
+        gridBagConstraints.ipady = 8;
+        add(qstButton, gridBagConstraints);
 
         texButton.setMnemonic(KeyEvent.VK_T);
         texButton.setText("Launch TexViewer (ALT+T)");
@@ -211,20 +254,25 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                 texButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 20;
+        gridBagConstraints.ipady = 8;
+        add(texButton, gridBagConstraints);
 
         GDLabel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         GDLabel.setText("GD Mod Tools");
-
-        jSeparator1.setBackground(new java.awt.Color(153, 153, 153));
-        jSeparator1.setForeground(new java.awt.Color(153, 153, 153));
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        add(GDLabel, gridBagConstraints);
 
         ModLabel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         ModLabel.setText("Mod Suite Setup");
-
-        jSeparator2.setBackground(new java.awt.Color(153, 153, 153));
-        jSeparator2.setForeground(new java.awt.Color(153, 153, 153));
-        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 2;
+        add(ModLabel, gridBagConstraints);
 
         DiscordButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Grim Dawn Discord Logo.png"))); // NOI18N
         DiscordButton.setContentAreaFilled(false);
@@ -233,30 +281,54 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                 DiscordButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 9;
+        add(DiscordButton, gridBagConstraints);
 
-        installButton.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         installButton.setText("Set GD Install Directory");
         installButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 installButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipady = 8;
+        add(installButton, gridBagConstraints);
 
-        initButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        initButton.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         initButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/appbar.cogs.png"))); // NOI18N
-        initButton.setText("<html>Initialize<br>Mod Suite<br>Config</html>");
+        initButton.setText("<html>Initialization</html>");
         initButton.setEnabled(false);
-        initButton.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        initButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        initButton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         initButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 initButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = -46;
+        add(initButton, gridBagConstraints);
 
         initLabel.setForeground(new java.awt.Color(255, 0, 51));
         initLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         initLabel.setText("<html>Install directory must be<br>set to initialize modding<br>suite configuration data.</html>");
         initLabel.setVisible(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 68;
+        add(initLabel, gridBagConstraints);
 
         workdirButton.setText("<html><center><b>Optional</b>:<br>Set Custom Working Directory</center></html>");
         workdirButton.setEnabled(false);
@@ -266,120 +338,27 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                 workdirButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 91;
+        gridBagConstraints.ipady = 11;
+        add(workdirButton, gridBagConstraints);
 
-        removeWorkDirButton.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         removeWorkDirButton.setText("<html><center><b>Optional</b>:<br>Remove Custom Working Directory</center></html>");
         removeWorkDirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeWorkDirButtonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(amButton)
-                            .addComponent(gdButton)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(GDLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(convButton)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(repairButton)
-                                    .addComponent(modelButton)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(worldButton)
-                                        .addComponent(qstButton)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(6, 6, 6)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(psButton)
-                                                .addComponent(texButton)))))))))
-                .addGap(12, 12, 12)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(DiscordButton)
-                .addGap(15, 15, 15)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(ModLabel))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(removeWorkDirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(installButton)
-                                        .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(17, 17, 17))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(initLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(initButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(45, 45, 45))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(GDLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(amButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(gdButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(convButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(modelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(repairButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(worldButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(psButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(qstButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(65, 65, 65)
-                                .addComponent(DiscordButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addComponent(ModLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(installButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(workdirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeWorkDirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(initButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(initLabel)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(texButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 92;
+        gridBagConstraints.ipady = 11;
+        add(removeWorkDirButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void DiscordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DiscordButtonActionPerformed
@@ -501,8 +480,6 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
     private javax.swing.JButton initButton;
     private javax.swing.JLabel initLabel;
     private javax.swing.JButton installButton;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JButton modelButton;
     private javax.swing.JButton psButton;
     private javax.swing.JButton qstButton;
