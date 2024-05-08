@@ -62,7 +62,7 @@ public class GDModSuite {
         SwingUtilities.invokeLater(() -> {
             UIManager.put("swing.boldMetal",Boolean.FALSE);
             try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 Logger.getLogger(GDModSuite.class.getName()).log(Level.SEVERE, null, ex);
             }

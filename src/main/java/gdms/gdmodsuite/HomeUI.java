@@ -146,7 +146,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         workdirButton = new javax.swing.JButton();
         removeWorkDirButton = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(645, 323));
+        setPreferredSize(new java.awt.Dimension(700, 350));
 
         amButton.setMnemonic(KeyEvent.VK_A);
         amButton.setText("Launch Asset Manager (ALT+A)");
@@ -195,11 +195,21 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         qstButton.addActionListener((ActionEvent e) -> {
             launch("QuestEditor.exe");
         });
+        qstButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                qstButtonActionPerformed(evt);
+            }
+        });
 
         texButton.setMnemonic(KeyEvent.VK_T);
         texButton.setText("Launch TexViewer (ALT+T)");
         texButton.addActionListener((ActionEvent e) -> {
             launch("TexViewer.exe");
+        });
+        texButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                texButtonActionPerformed(evt);
+            }
         });
 
         GDLabel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -217,6 +227,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         DiscordButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Grim Dawn Discord Logo.png"))); // NOI18N
+        DiscordButton.setContentAreaFilled(false);
         DiscordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DiscordButtonActionPerformed(evt);
@@ -247,15 +258,16 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         initLabel.setText("<html>Install directory must be<br>set to initialize modding<br>suite configuration data.</html>");
         initLabel.setVisible(false);
 
-        workdirButton.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         workdirButton.setText("<html><center><b>Optional</b>:<br>Set Custom Working Directory</center></html>");
         workdirButton.setEnabled(false);
+        workdirButton.setMargin(new java.awt.Insets(3, 14, 3, 14));
         workdirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 workdirButtonActionPerformed(evt);
             }
         });
 
+        removeWorkDirButton.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         removeWorkDirButton.setText("<html><center><b>Optional</b>:<br>Remove Custom Working Directory</center></html>");
         removeWorkDirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -268,37 +280,37 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(psButton))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(amButton)
+                            .addComponent(gdButton)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(gdButton))
-                    .addComponent(convButton)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(repairButton)
-                            .addComponent(modelButton)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(qstButton)
-                                .addComponent(worldButton)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addComponent(texButton)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addGap(34, 34, 34)
                         .addComponent(GDLabel))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(amButton)))
-                .addGap(18, 18, 18)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(convButton)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(repairButton)
+                                    .addComponent(modelButton)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(worldButton)
+                                        .addComponent(qstButton)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(6, 6, 6)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(psButton)
+                                                .addComponent(texButton)))))))))
+                .addGap(12, 12, 12)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DiscordButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGap(15, 15, 15)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -325,10 +337,10 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(12, Short.MAX_VALUE)
+                        .addContainerGap()
                         .addComponent(GDLabel)
                         .addGap(18, 18, 18)
                         .addComponent(amButton)
@@ -345,9 +357,7 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(psButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(qstButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(texButton))
+                        .addComponent(qstButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -365,9 +375,10 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(initButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(initLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(initLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(texButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -471,6 +482,14 @@ public class HomeUI extends javax.swing.JPanel implements Readyable {
         gdmsUtil.saveProperties(this.prop, this.file);
         this.removeWorkDirButton.setEnabled(false);
     }//GEN-LAST:event_removeWorkDirButtonActionPerformed
+
+    private void texButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_texButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_texButtonActionPerformed
+
+    private void qstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qstButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_qstButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DiscordButton;
