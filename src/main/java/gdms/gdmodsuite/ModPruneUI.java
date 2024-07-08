@@ -290,8 +290,16 @@ public class ModPruneUI extends javax.swing.JPanel implements Readyable {
         StringBuilder sb = new StringBuilder();
         boolean isST = false;
         for(String line : input) {
-            if(line.contains("Class,SkillTree,"))
+            if(line.contains("Class,SkillTree,")) {
                 isST = true; //Skilltrees shouldn't have their initial skill levels ("0", usually) removed - results in UI errors.
+                sb.append(line).append("\n");
+                continue;
+            }
+            if(line.contains("ragdollPhysics,")) {
+                // without this line multi-phase enemies may be unable to phase transition correctly
+                sb.append(line).append("\n");
+                continue;
+            }
             String[] spl = line.split(",");
             if(spl.length == 1)
                 continue;
